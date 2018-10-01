@@ -6,7 +6,8 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
-    "nodejieba": "^2.2.6"
+    "nodejieba": "^2.2.6",
+    "string-strip-html": "^3.2.0"
   },
   "devDependencies": {},
   "scripts": {

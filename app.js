@@ -8,6 +8,7 @@ nodejieba.load({
   stopWordDict: './dict/stopWord.utf8'
 })
 var topN = 10
+var stripHtml = require('string-strip-html')
 
 app.get('/', function (req, res) {
   res.send('Hello World!')
@@ -16,7 +17,7 @@ app.get('/', function (req, res) {
 app.post('/', function (req, res) {
   // console.log(req.body)
   var result = ''
-  result = nodejieba.extract(req.body.query, topN)
+  result = nodejieba.extract(stripHtml(req.body.query).trim(), topN)
   res.send(result)
 })
 
