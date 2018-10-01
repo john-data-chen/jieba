@@ -4,7 +4,6 @@ var bodyParser = require('body-parser')
 app.use(bodyParser.json())
 var nodejieba = require('nodejieba')
 nodejieba.load({
-  idfDict: './dict/idfDict.utf8',
   userDict: './dict/userdict.utf8',
   stopWordDict: './dict/stopWord.utf8'
 })
@@ -17,10 +16,6 @@ app.get('/', function (req, res) {
 app.post('/', function (req, res) {
   // console.log(req.body)
   var result = ''
-  // result = nodejieba.cut(req.body.query)
-  // result = nodejieba.cut(req.body.query, true)
-  // result = nodejieba.cutForSearch(req.body.query)
-  // result = nodejieba.tag(req.body.query)
   result = nodejieba.extract(req.body.query, topN)
   res.send(result)
 })
