@@ -5,25 +5,36 @@ nodejieba.load({
   userDict: './dict/userdict.utf8',
   stopWordDict: './dict/stopWord.utf8'
 })
-var topN = 10
+// jieba top setting
+var topN = 20
+// return how many top keywords
+var maxN = 10
+// number in this list won't be filtered
+var numberList = ['520', '921', '1111', '9453', '9487']
 var stripHtml = require('string-strip-html')
 
 var server = http.createServer((req, res) => {
   if (req.method === 'POST') {
     collectRequestData(req, result => {
-      var top10 = nodejieba.extract(stripHtml(result.query).trim(), topN)
-      // console.log(top10)
+      var top20 = nodejieba.extract(stripHtml(result.query).trim(), topN)
+      // console.log(top20)
+
       var ouptutString = ''
-      for (let key in top10) {
-        let value = top10[key]; // get the value by key
-        ouptutString += (parseInt(key)+1).toString() + '. ' + value.word +'<br>'
+      var counter = 1
+      for (let key in top20) {
+        let value = top20[key] // get the value by key
+        if (counter > maxN)
+          break
+        if (isNaN(value.word)) {
+          ouptutString += counter + '. ' + value.word + '<br>'
+          counter += 1
+        } else {
+          if (numberList.indexOf(value.word) > -1) {
+            ouptutString += counter + '. ' + value.word + '<br>'
+            counter += 1
+          }
+        }
       }
-      /*
-      top10.forEach(function(element) {
-        console.log(element)
-        ouptutString += element.word +'<br>'
-      })
-      */
       res.end(`<!doctype html>
       <html>
       <head>
@@ -52,7 +63,7 @@ var server = http.createServer((req, res) => {
             </head>
             <body>
                 <form action="/" method="post">
-                  <textarea rows="10" cols="100" maxlength="2000" name="query">
+                  <textarea rows="25" cols="100" maxlength="3000" name="query">
                   </textarea>
                   <input type="submit" value="Submit">
                 </form>
